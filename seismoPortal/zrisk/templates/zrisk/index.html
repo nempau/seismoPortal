@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load leaflet_tags %}
+{% load crispy_forms_tags %}
+
+
+{%block naslov_strane%} Izmena {{block.super}} {% endblock %}
+
+<head>
+{%block ZRiskhead%}
+
+    {% leaflet_js %}
+    {% leaflet_css %}
+
+    <script src="{% static 'js/leaflet.draw.js' %}"></script>
+    <script src="{% static 'js/leaflet-search.min.js' %}"></script>
+    <script src="{% static 'js/L.Control.Sidebar.js' %}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.draw.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet-search.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/L.Control.Sidebar.css' %}" />
+
+    <style>
+
+
+    .leaflet-container {  /* all maps */
+        width:  100%;
+        height: 600px !important;
+        
+    };
+    }
+
+    #specialbigmap {
+        height: 600px;
+    }
+	</style>
+{% endblock %}
+
+</head>
+
+
+
+<body>
+
+{%block ZRisk%}
+
+{% include 'zrisk/forma.html' %}
+
+{% leaflet_map "main" callback="main_map_init" %}
+
+<script type="text/javascript">
+
+	/*function forma(feature, layer){
+
+        layer.on('click', function (e) {
+            popuni.brstanara.value=feature.properties.brstanara,
+            popuni.zgradeID.value=feature.properties.zgradeID,
+            popuni.krivapovr.value=feature.properties.krivapovr,
+            popuni.krivljudi.value=feature.properties.krivljudi,
+            popuni.naziv.value=feature.properties.naziv
+        })
+
+    // does this feature have a property named popupContent?
+        //if (feature.properties && feature.properties.brstanara) {
+            //layer.bindPopup(popuni)
+        
+      //layer.bindPopup('<center><h1 class="infoHead"> Broj stanara </h1> <p class="infoHead">'
+	//+ brstanara +'</p></center>' );
+    //}
+	};*/
+
+
+    function main_map_init(map, options) {
+
+        {% include 'zrisk/basemap.html' %}
+        layerControl.addTo(map);
+
+        var leftSidebar = L.control.sidebar('forma', {
+            position: 'left',
+            autoPan: true,
+            closeButton: true
+
+        });
+        map.addControl(leftSidebar);
+       
+        leftSidebar.addTo(map);
+        
+
+
+        // method that we will use to update the control based on feature properties passed
+
+        function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+            leftSidebar.show();
+            popuni.brstanara.value=e.target.feature.properties.brstanara,
+            popuni.zgradeID.value=e.target.feature.properties.zgradeID,
+            popuni.krivapovr.value=e.target.feature.properties.krivapovr,
+            popuni.krivljudi.value=e.target.feature.properties.krivljudi,
+            popuni.naziv.value=e.target.feature.properties.naziv
+        }
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                click: zoomToFeature
+            });
+        }
+        
+
+        var osmsearch = new L.Control.Search({
+        url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
+
+        jsonpParam: 'json_callback',
+        propertyName: 'display_name',
+        propertyLoc: ['lat', 'lon'],
+        circleLocation: true,
+        autoType: false,
+        autoCollapse: true,
+        minLength: 4,
+        zoom: 17,
+        textPlaceholder: 'Search Addresses',
+        collapsed: true,
+        }).addTo(map);
+
+        
+        
+
+        var lZgrade = L.geoJson().addTo(map);
+        $.getJSON('{% url "dajZgrade" %}', function(data){
+		    zgrade=data
+		    var layer= L.geoJson(zgrade,{
+		    onEachFeature:onEachFeature
+		    })
+		    lZgrade.addLayer(layer);
+		      console.log('kraj')
+	       });
+
+        
+	};
+
+</script>
+
+{% endblock %}
+</body>

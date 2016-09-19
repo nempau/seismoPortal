@@ -1,0 +1,49 @@
+var osm = L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxNativeZoom: 19,
+          maxZoom: 22,
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          
+        });
+
+var cdblight = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          subdomains: 'abcd',
+          minZoom: 0,
+          maxZoom: 20,
+          maxNativeZoom: 18,
+          
+        });
+
+var cdbdark = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          subdomains: 'abcd',
+          minZoom: 0,
+          maxZoom: 20,
+          maxNativeZoom: 18,
+
+          });
+
+
+var ortho = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets-satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib3ZyZGMiLCJhIjoiRUtXeFFzZyJ9.ufnW36oCZo96m_L9QsAkYg', {
+          attribution: '<a href="https://mapbox.com/about/maps/">MapBox</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          subdomains: 'abcd',
+          maxZoom: 20,
+          maxNativeZoom: 18,
+
+          
+        });
+
+var streets = osm;
+var light = cdblight;
+var dark = cdbdark;
+var basemaps = {
+          "<div class='layers-control-img'></div> Streets": osm,
+          "<div class='layers-control-img'></div> Satellite": ortho,
+          "<div class='layers-control-img'></div> Grayscale": cdblight,
+          "<div class='layers-control-img'></div> Dark Matter": cdbdark,
+        };
+
+var layerControl = L.control.layers(basemaps, null, {
+              position: 'topright',
+              autoZIndex: true
+            });

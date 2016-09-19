@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load leaflet_tags %}
+
+
+
+{%block naslov_strane%} Оštećenje objekta {{block.super}} {% endblock %}
+
+<head>
+{%block ZRiskhead%}
+    {% leaflet_js %}
+    {% leaflet_css %}
+
+    <script src="{% static "js/leaflet.draw.js" %}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "css/leaflet.draw.css" %}" />
+
+    <style>
+
+    .leaflet-container {  /* all maps */
+        width:  100%;
+        height: 100%;
+    }
+
+    #specialbigmap {
+        height: 100%;
+    }
+
+</style>
+{% endblock %}
+</head>
+
+
+
+<body>
+{%block ZRisk%}
+
+
+
+{% leaflet_map "main" callback="main_map_init" %}
+
+<script type="text/javascript">
+
+	function popup(feature, layer){
+    // does this feature have a property named popupContent?
+    if (feature.properties && feature.properties.ostecenje) { 
+    	//layer.bindPopup( dialog)
+      layer.bindPopup('<center><h1 class="infoHead"> Oštećenje objekta u procentima: </h1> <p class="infoHead">'
+	+ feature.properties.osteceje +'</p></center>' );
+    }
+	};
+
+	
+    
+	function elementi(feature, layer){
+		var brstanara=feature.properties.brstanara
+		var zgradeID=feature.properties.zgradeID
+		var krivljudi=feature.properties.krivljudi
+		var krivapovr=feature.properties.krivapovr
+	}
+    
+    var popupContent= dialog
+    function main_map_init(map, options) {
+
+    	var drawControl = new L.Control.Draw({
+        draw: {
+          circle: false,
+          polyline: false,
+          marker: false,
+
+  
+        }
+      	}).addTo(map);
+
+
+
+
+        var lZgrade = L.geoJson().addTo(map);
+        $.getJSON('{% url "dajZgrade" %}', function(data){
+		zgrade=data
+		var layer= L.geoJson(zgrade,{
+		onEachFeature:popup
+		})
+		lZgrade.addLayer(layer);
+		console.log('kraj')
+		});
+		console.log('kraj')
+
+
+ 
+    }
+
+
+</script>
+
+{% endblock %}
+</body>

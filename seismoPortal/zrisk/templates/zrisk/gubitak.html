@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load leaflet_tags %}
+
+
+
+{%block naslov_strane%} Gubitak ljudi {{block.super}} {% endblock %}
+
+<head>
+{%block ostecenjehead%}
+    {% leaflet_js %}
+    {% leaflet_css %}
+
+    <script src="{% static "js/leaflet.draw.js" %}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "css/leaflet.draw.css" %}" />
+
+    <style>
+
+    .leaflet-container {  /* all maps */
+        width:  100%;
+        height: 600px;
+    }
+
+    #specialbigmap {
+        height: 600px;
+    }
+
+    .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+    }
+    .info h4 {
+        margin: 0 0 5px;
+        color: #777;
+    }
+
+
+    .legend {
+        line-height: 18px;
+        color: #333;
+
+
+    }
+
+    .legend i {
+
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.8;
+        }
+
+
+
+    </style>
+{% endblock %}
+</head>
+
+
+
+<body>
+{%block ZRisk%}
+
+
+
+{% leaflet_map "main" callback="main_map_init" %}
+
+<script type="text/javascript">
+
+    function getColor(d) {
+    return d > 40   ? '#8C0D04' :
+           d > 30   ? '#DE0F00' :
+           d > 20   ? '#FF1100' :
+           d > 12   ? '#FF3C00' :
+           d > 10   ? '#FF7700' :
+           d > 8   ? '#FFA600' :
+           d > 6   ? '#FFFF00' :
+           d > 4   ? '#BFFF00' :
+           d > 2   ? '#62FF00' :
+                      '#00FF00';
+        }
+
+    function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.ljudi),
+        weight: 2,
+        opacity: 1,
+        color: 'blue',
+        dashArray: '1',
+        fillOpacity: 0.7
+    };
+}
+
+
+    function main_map_init(map, options) { 
+
+        {% include 'zrisk/basemap.html' %}
+
+        var info = L.control();
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        info.update = function (props) {
+            this._div.innerHTML = '<h4>Gubitak ljudi : </h4>' +  (props ?
+                '<b>'+ 'ID Zgrade: ' + props.zgradeID + '</b><br />'+'<b>' + 'Broj stanara: ' + props.brstanara + '</b><br />' + 'Broj poginulih: ' + props.ljudi : 'Postavi kursor na zgradu');
+        };
+
+        info.addTo(map);
+        layerControl.addTo(map);
+
+        var legend = L.control({position: 'bottomright'});
+
+        legend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0, 2, 4, 6, 8, 10, 12, 20, 30, 40],
+                labels = [];
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+
+            return div;
+        };
+
+        legend.addTo(map);
+
+            function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                layer.bringToFront();
+            }
+            info.update(layer.feature.properties);
+        }
+
+
+
+        function resetHighlight(e) {
+            z.resetStyle(e.target);
+            info.update();
+        }
+
+        function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: zoomToFeature
+            });
+        }
+
+        var lZgrade = L.geoJson().addTo(map);
+        var z;
+
+        $.getJSON('{% url "dajZgrade" %}', function(data){
+        zgrade=data
+        z= L.geoJson(zgrade,{
+            style: style,
+            onEachFeature:onEachFeature,
+        
+        })
+        lZgrade.addLayer(z);
+
+        console.log(z)
+        });
+        console.log('kraj')
+    }
+
+
+
+</script>
+
+{% endblock %}
+</body>

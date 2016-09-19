@@ -38,7 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #Dodato
+    'crispy_forms',
+    'leaflet',
+    'djgeojson',
     'django.contrib.gis',
+    'zrisk',
+
 ]
 
 MIDDLEWARE = [
@@ -130,3 +135,31 @@ STATIC_ROOT=os.path.join(BASE_DIR, 'static_server')
 STATICFILES_DIRS= [
 os.path.join(BASE_DIR, 'static_base'),
 ]
+
+LEAFLET_CONFIG = {
+
+
+
+    'DEFAULT_CENTER' : (44.01, 20.91),
+    'DEFAULT_ZOOM': 17,
+    'MIN_ZOOM': 12,
+    'MAX_ZOOM': 18,
+
+    'SPATIAL_EXTENT': (20.8, 43.95, 21, 44.1),
+    
+
+    'PLUGINS': {
+        'draw': {
+            'css': 'css/leaflet.draw.css',
+            'js': 'js/leaflet.draw.js',
+            'auto-include': True,
+        },
+        
+    },
+    
+    'ATTRIBUTION_PREFIX': 'Nemanja',
+# conf here
+}
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
