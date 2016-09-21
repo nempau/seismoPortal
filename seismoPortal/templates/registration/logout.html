@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{%block naslov_strane%} Logout {{block.super}} {% endblock %}
+
+<style>
+{% block stile%}
+.hr {
+    border-top: 2px solid #000;
+}
+.jumbotron {background-color: #ffd706;
+            color:#000 ;    
+}
+
+{% endblock%}
+</style>
+
+
+{% block content %}
+
+<div class="jumbotron">
+<div class="container center">
+<p class='text-align-center lead' >Uspešno ste se izlogovali.</p>
+<p class='text-align-center lead' >Hvala Vam na izdojenom vremenu da naš grad učinimo bezednijim mestom!</p>
+<p class='text-align-center lead'><a href="{% url 'pocetna' %}">Vratite se na početnu stranu</a></p></p>
+</div>
+</div>
+
+{% endblock%}
+
+

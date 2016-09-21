@@ -47,3 +47,18 @@ class Kriva(models.Model):
 
     def __str__(self):
         return str(self.vID)
+
+class Korisnik(models.Model):
+    idKorisnika= models.AutoField(primary_key=True)
+    ime= models.CharField(max_length=100)
+    prezime=models.CharField(max_length=100)
+    telefon=models.CharField(max_length=20)
+    email=models.EmailField()
+    grad= models.CharField(max_length=100)
+    opstina= models.CharField(max_length=100)
+    adresa=models.CharField(max_length=100)
+    datumRegistracije=models.DateTimeField(auto_now_add=True, auto_now=False)
+
+    def __str__(self):
+        return str(self.email)
+

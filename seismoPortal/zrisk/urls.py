@@ -10,6 +10,7 @@ urlpatterns = [
 	url(r'^gubitakLjudi$', views.dajGubitak, name='gubitak'),
 	url(r'^ostecenje$', views.dajOstecenje, name='ostecenje'),
     url(r'^zgrade.geojson$', GeoJSONLayerView.as_view(model=Zgrada, properties=('brstanara','krivapovr','krivljudi','zgradeID', 'ljudi', 'ostecenje', 'naziv')), name='dajZgrade'),
+    
     #url(r'^/create$', views.createForma, name='createForma'),
     #url(r'^zgrade.geojson$', views.dajZgrade, name='dajZgrade'),
     #url(r'^zgrade/(?P<z>\d+)/(?P<x>\d+)/(?P<y>\d+).geojson$',

@@ -5,11 +5,26 @@ from djgeojson.views import GeoJSONLayerView
 from django.core.serializers import serialize
 from django.http import HttpResponse, HttpResponseRedirect
 #
-from .forms import EditForma
+from .forms import EditForma, RegistracijaForma
 
 
 def dajPocetnu(request):
-	return render(request, 'zrisk/pocetna.html',  {})
+	
+	forma=RegistracijaForma(request.POST or None )
+	context={'forma':forma
+	}
+
+	
+	context={'forma':forma
+	}
+	if forma.is_valid():
+		instance=forma.save(commit=False)
+		instance.save()
+		context={'forma':forma, 
+				'Poruka': "hvala"
+	}
+
+	return render(request, 'zrisk/pocetna.html',  context)
 
 def dajGubitak(request):
 	return render(request, 'zrisk/gubitak.html',  {})
@@ -17,10 +32,8 @@ def dajGubitak(request):
 def dajOstecenje(request):
 	return render(request, 'zrisk/ostecenje.html',  {})	
 
-
-
-def dajZrisk(request):
-	return render(request, 'zrisk/index.html',  {})
+#def dajZrisk(request):
+	#return render(request, 'zrisk/index.html',  {})
 
 
 def dajZrisk(request):

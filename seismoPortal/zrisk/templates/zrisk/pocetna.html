@@ -12,6 +12,7 @@
 .jumbotron {background-color: #ffd706;
             color:#000 ;    
 }
+
 {% endblock%}
 </style>
     
@@ -19,11 +20,27 @@
         <!-- Main component for a primary marketing message or call to action -->
         <div class="jumbotron">
         <div class="container">
-            <h1 class="text-center">Projekat SeismoPortal</h1>
-            <p class= "text-center">Projekat predstavlja rezultat master rada <br><b>"ZRisk TEMA MASTER RADA"</b></br> iz predmeta Veb kartogravija, Građevinskog fakulteta Univerziteta u Beogradu, odskea za gedeziju i geoinformatiku.</p>
+            <h1 class="text-center">SeismoPortal </h1>
+            <h2 class="text-center">Crowdsourcing veb aplikacija za procenu rizika od zemljotresa </h2>
+            
+            <p class= "text-center">Projekat predstavlja rezultat master rada <br><b>"Razovj veb aplikacije za procenu štete od zemljotresa"</b></br> iz uže naučne oblasti Geodetska karografija, Građevinskog fakulteta Univerziteta u Beogradu, odskea za gedeziju i geoinformatiku.</p>
             <p class="text-center">
             <a class="btn btn-lg btn-default" href="/" role="button"> <i class="fa fa-github fa-2x" aria-hidden="true"></i>GitHub &raquo;</a>
             </p>
         </div>
         </div>
+        <!--
+        <div class="row" id="forma" >
+            <div class="col-md-3">
+        <h1> Registruj se: </h1>
+        {% load crispy_forms_tags %}
+        <form  id="registracija" method= 'POST' action=''> {% csrf_token %}
+
+        {{ forma|crispy }}
+        <input class="btn btn-primary" type="submit" value='Registruj se'/>
+        </form>
+            </div>
+        </div>
+        //-->
+
     {% endblock%}
