@@ -145,7 +145,8 @@ LEAFLET_CONFIG = {
     'MIN_ZOOM': 12,
     'MAX_ZOOM': 18,
 
-    'SPATIAL_EXTENT': (20.8, 43.95, 21, 44.1),
+    #'SPATIAL_EXTENT': (20.8, 43.95, 21, 44.1),
+    'SPATIAL_EXTENT': (19, 42, 22, 45),
     
 
     'PLUGINS': {

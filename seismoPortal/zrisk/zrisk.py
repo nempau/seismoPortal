@@ -1,11 +1,26 @@
-import time
+import time, math
 from .models import Hazard, Zgrada, Kriva
 
-start_time = time.time()
+
 zgrade=Zgrada.objects.all()
 hazardi=Hazard.objects.all()
-krive=Kriva.objects.all()
 
+
+
+dicPovredljivost={}
+preskoci=True
+for field in Kriva._meta.get_fields():
+    f=field.name
+    vrednosti=[]
+    if preskoci is True:
+        preskoci=False
+        pass
+    else:   
+        for featureP in Kriva.objects.all():
+            vrednost=featureP.__dict__[f]
+            vrednosti+=[vrednost]
+             #print vrednosti
+        dicPovredljivost[f]=vrednosti
 
 krivaP= []
 krivaH= []
@@ -13,7 +28,7 @@ krivaAp= []
 krivaAh= []
 
 def pgaUzgrade():
-    
+    start_time = time.time()
     for zgr in zgrade :
         for haz in hazardi:
             if type(zgr.pga) is type(None):
@@ -27,7 +42,7 @@ def pgaUzgrade():
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def pgaUzgrade1():
-    
+    start_time = time.time()
     for zgr in zgrade :
         for haz in hazardi:
 
@@ -40,6 +55,7 @@ def pgaUzgrade1():
 
 
 def interpolacija():
+	start_time = time.time()
 	##--Pronalazenje PGA za krivu povredljivosti i krivu ostecenja--##
 
 	for zgr in zgrade:
@@ -55,26 +71,11 @@ def interpolacija():
 
 	    pga=zgr.pga
 
+	    krivaP=dicPovredljivost[keyP] #t1
+	    krivaH=dicPovredljivost[keyH]
 
-	    krivaPlista=Kriva.objects.values_list(keyP)
-	    global krivaP
-	    for p in krivaPlista:
-	    	krivaP+=[p[0]] #t1
-
-	    krivaHlista=Kriva.objects.values_list(keyH)
-	    global krivaH
-	    for h in krivaHlista:
-	        krivaH+=[h[0]]
-
-	    krivaAplista=Kriva.objects.values_list(keyAp)
-	    global krivaAp
-	    for ap in krivaAplista:
-	        krivaAp+=[ap[0]] #t1
-
-	    krivaAhilsta=Kriva.objects.values_list(keyAh)
-	    global krivaAh
-	    for ah in krivaAhilsta:
-	        krivaAh+=[ah[0]] #t1
+	    krivaAp=dicPovredljivost[keyAp] #t1
+	    krivaAh=dicPovredljivost[keyAh]
 
 	    minIndex1h=None
 	    minIndex2h=None
@@ -87,7 +88,7 @@ def interpolacija():
 	        valueH=krivaH[indexH]
 	        valueAh=krivaAh[indexH]
 
-	        zgr.ljudi = int(valueH*brojStanara)
+	        zgr.ljudi = math.ceil(valueH*brojStanara)
 	        #zgr.ljudi = 999
 	        #Zgrada.save(zgr)
 	        
@@ -124,7 +125,7 @@ def interpolacija():
 	        ljudi=valueH1+hx
 	        
 	        #print ljudi
-	        zgr.ljudi = int(ljudi*brojStanara)
+	        zgr.ljudi = math.ceil(ljudi*brojStanara)
 	        #zgr.ljudi = 111
 	        #Zgrada.save(zgr)
 
@@ -136,7 +137,7 @@ def interpolacija():
 	        
 	        #zapis u polje
 	        #zgr.ostecenje=98
-	        zgr.ostecenje = valueP*100
+	        zgr.ostecenje = math.ceil(valueP*100)
 	        #Zgrada.save(zgr)
 	    else:
 	        
@@ -175,7 +176,7 @@ def interpolacija():
 	    
 	        #zapis u polje
 	        #zgr.ostecenje=2
-	        zgr.ostecenje = ostecenje*100
+	        zgr.ostecenje = math.ceil(ostecenje*100)
 	        #feature['ostecenje'] = 1.1111111
 	    Zgrada.save(zgr)
 	print("--- %s seconds ---" % (time.time() - start_time))    

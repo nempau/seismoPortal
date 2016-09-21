@@ -10,10 +10,11 @@
 {%block ostecenjehead%}
     {% leaflet_js %}
     {% leaflet_css %}
-
-    <script src="{% static "js/leaflet.draw.js" %}"></script>
+    <script src="{% static 'js/L.Control.Locate.min.js' %}"></script>
+    <script src="{% static 'js/leaflet-search.min.js' %}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{% static "css/leaflet.draw.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet-search.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/L.Control.Locate.min.css' %}" />
 
     <style>
 
@@ -38,13 +39,9 @@
         margin: 0 0 5px;
         color: #777;
     }
-
-
     .legend {
         line-height: 18px;
         color: #333;
-
-
     }
 
     .legend i {
@@ -55,48 +52,48 @@
         margin-right: 8px;
         opacity: 0.8;
         }
-
-
-
     </style>
 {% endblock %}
 </head>
 
 
-
 <body>
 {%block ZRisk%}
-
-
 
 {% leaflet_map "main" callback="main_map_init" %}
 
 <script type="text/javascript">
 
     function getColor(d) {
-    return d > 75   ? '#FF0000' :
-           d > 60   ? '#FF6200' :
-           d > 50   ? '#FFD000' :
-           d > 30   ? '#F6FF00' :
-                      '#00FF15';
-        }
+        return d > 75   ? '#FF0000' :
+            d > 60   ? '#FF6200' :
+            d > 50   ? '#FFD000' :
+            d > 30   ? '#F6FF00' :
+                        '#00FF15';
+    }
 
     function style(feature) {
-    return {
+        return {
         fillColor: getColor(feature.properties.ostecenje),
         weight: 2,
         opacity: 1,
         color: 'blue',
         dashArray: '1',
         fillOpacity: 0.7
-    };
-}
+        };
+    }
 
 
     function main_map_init(map, options) { 
 
-        {% include 'zrisk/basemap.html' %}
+        var lc = L.control.locate({
+            position: 'topleft',
+            strings: {
+                title: "Ovo je Vaša trenutna lokacija!"
+            }
+        }).addTo(map);
 
+        {% include 'zrisk/basemap.html' %}
         var info = L.control();
 
         info.onAdd = function (map) {
@@ -108,7 +105,7 @@
         // method that we will use to update the control based on feature properties passed
         info.update = function (props) {
             this._div.innerHTML = '<h4>Oštećenje zgrade:</h4>' +  (props ?
-                '<b>' + props.zgradeID + '</b><br />' + props.ostecenje +'%' : 'Postavi kursor na zgradu');
+                '<b>'+ 'ID Zgrade: '+ props.zgradeID +'</b><br />'+'<b>' + 'Broj stanara: ' +  props.brstanara + '</b><br />' + 'Oštećenje zgrade: ' + props.ostecenje+ '%' : 'Postavi kursor na zgradu');
         };
 
         info.addTo(map);
@@ -125,8 +122,8 @@
             // loop through our density intervals and generate a label with a colored square for each interval
             for (var i = 0; i < grades.length; i++) {
                 div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '%+');
+                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + 
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%<br>' : '%+');
             }
 
             return div;
@@ -149,9 +146,6 @@
             }
             info.update(layer.feature.properties);
         }
-
-
-
         function resetHighlight(e) {
             z.resetStyle(e.target);
             info.update();
@@ -185,10 +179,6 @@
 		});
 		console.log('kraj')
     }
-
-
-
 </script>
-
 {% endblock %}
 </body>

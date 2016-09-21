@@ -23,36 +23,25 @@ def dajZrisk(request):
 	return render(request, 'zrisk/index.html',  {})
 
 
-# Create your views here.
-def dajZriska(request):
-#def createForma(request):
-	form= EditForma(request.POST or None)
-	if form.is_valid():
-		instance=form.save(commit=False)
-		instance.save()
-		#return HttpResponseRedirect(instance.get_absolute_url())
-	context = { 'form': form}
-	return render(request, 'zrisk/index.html', context)
-
-def dajZrisk(request ):
+def dajZrisk(request):
 	form=None
 	zgradeID=request.POST.get('zgradeID')
 	if zgradeID==None:
-		instance=Zgrada.objects.get(zgradeID=8780)
-		form=EditForma(request.POST or None, instance=instance)
-		print (instance)
-	else:
+		instance2=Zgrada.objects.first()
+		form=EditForma(request.POST or None, instance=instance2)
+		print (instance2)
+	elif Zgrada.objects.filter(zgradeID= request.POST.get('zgradeID')).count()==1:
 		instance=get_object_or_404(Zgrada, zgradeID=request.POST.get('zgradeID'))
 		form=EditForma(request.POST or None, instance=instance)
-		print (instance)
+	else:
+		form= EditForma(request.POST or None)	
 	if form.is_valid():
-		print (instance)
+		
 		instance=form.save(commit=False)
 		instance.save()
-		#return HttpResponseRedirect(instance.get_absolute_url())
 	context = { 'form': form}
 	return render(request, 'zrisk/index.html', context)
-	#return render(request, 'zrisk/index.html')
+	
 
 
 

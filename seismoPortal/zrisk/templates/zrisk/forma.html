@@ -1,7 +1,8 @@
 <div id="forma">
-<h1> Izmeni parametre zgrade </h1>
+<h1> Unesite tražene parametre za vašu zgradu </h1>
+<p>Molimo da unesete parametre koji su nam neophodni da sračuno rizik od zemljotresa za vašu zgradu: <p>
 <form  id="popuni" method= 'POST' action=''> {% csrf_token %}
  {{ form.as_p }}
-<input class="btn btn-primary" type="submit" value='Napravi izmene'/>
-</form>	
+<input class="btn btn-primary" type="submit" value='Pošalji parametre'/>
 </div>
+

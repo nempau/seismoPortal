@@ -47,3 +47,17 @@ var layerControl = L.control.layers(basemaps, null, {
               position: 'topright',
               autoZIndex: true
             });
+            
+var search = new L.Control.Search({
+            url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
+            jsonpParam: 'json_callback',
+            propertyName: 'display_name',
+            propertyLoc: ['lat', 'lon'],
+            circleLocation: false,
+            autoType: false,
+            autoCollapse: true,
+            minLength: 5,
+            zoom: 17,
+            textPlaceholder: 'Unesi adresu',
+            collapsed: true,
+            }).addTo(map);

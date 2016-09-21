@@ -10,10 +10,11 @@
 {%block ostecenjehead%}
     {% leaflet_js %}
     {% leaflet_css %}
-
-    <script src="{% static "js/leaflet.draw.js" %}"></script>
+    <script src="{% static 'js/L.Control.Locate.min.js' %}"></script>
+    <script src="{% static 'js/leaflet-search.min.js' %}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{% static "css/leaflet.draw.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet-search.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/L.Control.Locate.min.css' %}" />
 
     <style>
 
@@ -99,6 +100,13 @@
 
 
     function main_map_init(map, options) { 
+
+        var lc = L.control.locate({
+            position: 'topleft',
+            strings: {
+                title: "Ovo je Vaša trenutna lokacija!"
+            }
+        }).addTo(map);
 
         {% include 'zrisk/basemap.html' %}
 
