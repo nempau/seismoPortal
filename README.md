@@ -1,5 +1,6 @@
 # SeismoPortal
-Crowdsourcing web aplikacija za procenu rizika od zemljotresa
+
+SeismoPortal je Crowdsourcing web aplikacija za procenu rizika od zemljotresa.
 Projekat predstavlja rezultat master rada 
 "Razovj web aplikacije za procenu štete od zemljotresa"
 iz uže naučne oblasti Geodetska kartografija, Građevinskog fakulteta Univerziteta u Beogradu, odseka za geodeziju i geoinformatiku.
